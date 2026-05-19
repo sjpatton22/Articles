@@ -1,0 +1,31 @@
+% ODE: x'(t) = lambda*x(t),  x(0) = 1
+lambda = -1;          % choose lambda
+T = 5;                % final time
+N = 50;               % number of time steps
+h = T/N;              % step size
+
+t = zeros(N+1,1);
+x = zeros(N+1,1);
+
+% initial condition
+t(1) = 0;
+x(1) = 1;
+
+% Euler's method
+for n = 1:N
+    t(n+1) = t(n) + h;
+    x(n+1) = x(n) + h*lambda*x(n);
+end
+
+% exact solution
+x_exact = exp(lambda*t);
+
+% plot
+plot(t,x,'-','LineWidth',1.5); hold on;
+plot(t,x_exact,'--','LineWidth',1.5);
+grid on;
+
+xlabel('t');
+ylabel('x(t)');
+legend('Euler approximation','Exact solution');
+title(sprintf('Euler Method for x'' = %gx, h = %.2f', lambda, h));
