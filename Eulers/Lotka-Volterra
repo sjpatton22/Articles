@@ -1,0 +1,42 @@
+clear; clc; close all;
+
+% Lotka-Volterra System:
+% u'(t) = 0.05u(t)(1 - 0.01v(t))
+% v'(t) = 0.1v(t)(0.005u(t) - 2)
+
+T = 300;              % final time
+N = 200000;               % number of time steps
+h = T/N;               % step size
+
+t = zeros(N+1,1);
+u = zeros(N+1,1);
+v = zeros(N+1,1);
+
+% initial conditions
+t(1) = 0;
+u(1) = 300;            % rabbits
+v(1) = 20;             % foxes
+
+% Euler's method
+for n = 1:N
+    t(n+1) = t(n) + h;
+
+    u(n+1) = u(n) + h*(0.05*u(n)*(1 - 0.01*v(n)));
+    v(n+1) = v(n) + h*(0.1*v(n)*(0.005*u(n) - 2));
+end
+
+% plot populations over time
+figure;
+plot(t,u,'r--','LineWidth',1.5); hold on;
+plot(t,v,'b--','LineWidth',1.5);
+
+grid on;
+
+xlabel('t');
+ylabel('population');
+legend('Rabbits u(t)', 'Foxes v(t)', ...
+       'Location', 'best');
+
+title(sprintf('Euler Method for Lotka-Volterra System'));
+
+xlim([0 T]);
