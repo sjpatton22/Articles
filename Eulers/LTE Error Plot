@@ -1,0 +1,57 @@
+clear; clc; close all;
+
+% ODE: x'(t) = lambda*x(t),  x(0) = 1
+lambda = -1;
+x0 = 1;
+
+% step sizes
+h_values = [0.8 0.4 0.2 0.1 0.05 0.025];
+
+LTE = zeros(length(h_values),1);
+ratio = zeros(length(h_values),1);
+
+for k = 1:length(h_values)
+
+    h = h_values(k);
+
+    % one Euler step
+    t = zeros(2,1);
+    x = zeros(2,1);
+
+    % initial condition
+    t(1) = 0;
+    x(1) = x0;
+
+    % Euler's method
+    for n = 1:1
+        t(n+1) = t(n) + h;
+        x(n+1) = x(n) + h*lambda*x(n);
+    end
+
+    % exact solution after one step
+    x_exact = exp(lambda*t);
+
+    % local truncation error
+    LTE(k) = abs(x_exact(end) - x(end));
+
+end
+
+% ratio of previous LTE to current LTE
+ratio(1) = NaN;
+for k = 2:length(h_values)
+    ratio(k) = LTE(k-1)/LTE(k);
+end
+
+% plot LTE
+figure;
+loglog(h_values,LTE,'o-','LineWidth',1.5);
+grid on;
+
+xlabel('Step size h');
+ylabel('Local truncation error');
+title('Euler Method LTE: Order 2 Behavior');
+
+% print table
+Table = table(h_values(:), LTE(:), ratio(:), ...
+    'VariableNames', {'h','LTE','Previous_to_Current_Ratio'});
+disp(Table);
