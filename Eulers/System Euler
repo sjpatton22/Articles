@@ -1,0 +1,50 @@
+clear; clc; close all;
+
+% System:
+% x'(t) = -3x(t)
+% y'(t) = x(t) - y(t)
+% x(0) = 1, y(0) = 0
+
+T = 8;                 % final time
+N = 40;                % number of time steps
+h = T/N;               % step size
+
+t = zeros(N+1,1);
+x = zeros(N+1,1);
+y = zeros(N+1,1);
+
+% initial conditions
+t(1) = 0;
+x(1) = 1;
+y(1) = 0;
+
+% Euler's method
+for n = 1:N
+    t(n+1) = t(n) + h;
+
+    x(n+1) = x(n) + h*(-3*x(n));
+    y(n+1) = y(n) + h*(x(n) - y(n));
+end
+
+% exact solutions
+x_exact = exp(-3*t);
+y_exact = (1/2)*(exp(-t) - exp(-3*t));
+
+% plot
+plot(t,x,'r--','LineWidth',1.5); hold on;
+plot(t,x_exact,'k-','LineWidth',1.5);
+
+plot(t,y,'b--','LineWidth',1.5);
+plot(t,y_exact,'k-','LineWidth',1.5);
+
+grid on;
+
+xlabel('t');
+ylabel('solution value');
+legend('Euler x(t)', 'Exact x(t)', ...
+       'Euler y(t)', 'Exact y(t)', ...
+       'Location', 'best');
+
+title(sprintf('Euler Method for System, h = %.2f', h));
+
+xlim([0 6]); ylim([-0.05 0.5]);
