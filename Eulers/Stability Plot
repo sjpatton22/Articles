@@ -1,0 +1,51 @@
+clear; clc; close all;
+
+% ODE: x'(t) = lambda*x(t),  x(0) = 1
+lambda = -10;          % choose lambda
+T = 10;                % final time
+
+% step sizes
+h_values = [0.195 0.205];
+
+% exact solution
+t_exact = linspace(0,T,1000);
+x_exact = exp(lambda*t_exact);
+
+% plot exact solution
+plot(t_exact,x_exact,'k-','LineWidth',2.5); hold on;
+grid on;
+
+for k = 1:length(h_values)
+
+    h = h_values(k);       % step size
+    N = floor(T/h);        % number of time steps
+
+    t = zeros(N+1,1);
+    x = zeros(N+1,1);
+
+    % initial condition
+    t(1) = 0;
+    x(1) = 1;
+
+    % Euler's method
+    for n = 1:N
+        t(n+1) = t(n) + h;
+        x(n+1) = x(n) + h*lambda*x(n);
+    end
+
+    % plot
+    plot(t,x,'-o','LineWidth',1.2,'MarkerSize',4);
+
+end
+
+xlabel('t');
+ylabel('x(t)');
+legend('Exact solution', ...
+       sprintf('Euler approximation, h = %.3f', h_values(1)), ...
+       sprintf('Euler approximation, h = %.3f', h_values(2)), ...
+       'Location','best');
+
+title('Euler Stability Near the Limit for x'' = -10x');
+
+xlim([0 T]);
+ylim([-3 3]);
